@@ -1,0 +1,7 @@
+
+This is how you make a new hamt object 
+//const hamt<tuple, tuple>* h = new ((hamt<tuple,tuple>*)GC_MALLOC(sizeof(hamt<tuple,tuple>))) hamt<tuple,tuple>();
+
+In our case, it will look like this
+//const hamt<scheme_key, scheme_key>* h = new ((hamt<scheme_key,scheme_key>*)GC_MALLOC(sizeof(hamt<scheme_key,scheme_key>)))
+								hamt<scheme_key,scheme_key>();

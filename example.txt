@@ -1,0 +1,151 @@
+All public tests with GC off compiled with flags
+-lgc and -std=c++11.
+
+
+osboxes@osboxes:~/Desktop/CMSC430/Final/Solutions$ racket tests.rkt "all"'(eval-llvm "bad status code")
+Test exceptions-continuations failed!
+'(eval-llvm "bad status code")
+Test guard-continuations failed!
+Score on available tests (may not include release tests or private tests): 60.0%
+
+
+All public tests with GC on compiled with the same flags. 
+
+osboxes@osboxes:~/Desktop/CMSC430/Final/Solutions$ racket tests.rkt "all"
+'(eval-llvm "bad status code")
+Test exceptions-continuations failed!
+'(eval-llvm "bad status code")
+Test guard-continuations failed!
+Score on available tests (may not include release tests or private tests): 60.0%
+osboxes@osboxes:~/Desktop/CMSC430/Final/Solutions$
+
+Error Case Tests
+
+div-by-0 0
+
+osboxes@osboxes:~/Desktop/CMSC430/Final/Solutions$ racket tests.rkt "div-by-zero-0"
+'(eval-llvm "bad status code")
+"Evaluation failed:"
+(exn:fail:contract:divide-by-zero
+ "/: division by zero"
+ #<continuation-mark-set>)
+'(begin
+   (define y 10)
+   (define x 20)
+   (define z 0)
+   (define r (let ((lst `(1 2 ,y ,z))) (/ (foldl + 0 lst) 0)))
+   r)
+Test failed!
+osboxes@osboxes:~/Desktop/CMSC430/Final/Solutions$ ./bin
+library run-time error: (prim / a b); b is 0: Division by 0 undefined.
+osboxes@osboxes:~/Desktop/CMSC430/Final/Solutions$ 
+
+div-by-0 1
+
+osboxes@osboxes:~/Desktop/CMSC430/Final/Solutions$ racket tests.rkt "div-by-zero-1"
+'(eval-llvm "bad status code")
+"Evaluation failed:"
+(exn:fail:contract:divide-by-zero
+ "/: division by zero"
+ #<continuation-mark-set>)
+'(begin
+   (define globe 0)
+   (let () (begin (set! globe (+ globe 5))))
+   (set! globe (- globe 3))
+   (letrec () (set! globe (- (* globe 10) 6)))
+   (/ globe (- (+ (- globe 4) (- globe 10)) 14)))
+Test failed!
+osboxes@osboxes:~/Desktop/CMSC430/Final/Solutions$ ./bin
+library run-time error: (prim / a b); b is 0: Division by 0 undefined.
+osboxes@osboxes:~/Desktop/CMSC430/Final/Solutions$ 
+
+too-many-arguments 0
+
+osboxes@osboxes:~/Desktop/CMSC430/Final/Solutions$ racket tests.rkt "too-many-arguments-0"
+"Evaluation failed:"
+(exn:fail:contract:arity
+ "lam0: arity mismatch;\n the expected number of arguments does not match the given number\n  expected: 3\n  given: 4\n  arguments...:\n   3\n   4\n   5\n   'extra-arg"
+ #<continuation-mark-set>)
+'(begin
+   (define lam (lambda (x) (+ x 2)))
+   (define lam0 (lambda (x y z) (+ x y z)))
+   (define (my-map f list)
+     (cond ((null? list) '()) ((cons (f (car list)) (my-map f (cdr list))))))
+   (define list0 (my-map lam '(1 2 3)))
+   (lam0 (car list0) (car (cdr list0)) (car (cdr (cdr list0))) 'extra-arg))
+Test failed!
+osboxes@osboxes:~/Desktop/CMSC430/Final/Solutions$ ./bin
+"library runtime error: Too many arguments provided to function."
+osboxes@osboxes:~/Desktop/CMSC430/Final/Solutions$ 
+
+
+
+
+too-many-arguments 1
+
+
+osboxes@osboxes:~/Desktop/CMSC430/Final/Solutions$ racket tests.rkt "too-many-arguments-1"
+"Evaluation failed:"
+(exn:fail:contract:arity
+ "f: arity mismatch;\n the expected number of arguments does not match the given number\n  expected: 1\n  given: 2\n  arguments...:\n   10\n   11"
+ #<continuation-mark-set>)
+'(begin
+   (begin (define (f x) (g x (+ x 10))) 'done)
+   (define r
+     (letrec*
+      ()
+      0
+      (letrec () 1 (let* () 2 (let () 3 (define f (lambda (g) g)) (f '4))))))
+   (begin 'a 'b 'c (define (g u v) (+ u r v)))
+   (f 10 11))
+Test failed!
+osboxes@osboxes:~/Desktop/CMSC430/Final/Solutions$ ./bin
+"library runtime error: Too many arguments provided to function."
+osboxes@osboxes:~/Desktop/CMSC430/Final/Solutions$ 
+
+too-few-arguments 0
+
+osboxes@osboxes:~/Desktop/CMSC430/Final/Solutions$ racket tests.rkt "too-few-arguments-0"
+"Evaluation failed:"
+(exn:fail:contract:arity
+ "lam0: arity mismatch;\n the expected number of arguments does not match the given number\n  expected: 3\n  given: 2\n  arguments...:\n   3\n   4"
+ #<continuation-mark-set>)
+'(begin
+   (define lam (lambda (x) (+ x 2)))
+   (define lam0 (lambda (x y z) (+ x y z)))
+   (define (my-map f list)
+     (cond ((null? list) '()) ((cons (f (car list)) (my-map f (cdr list))))))
+   (define list0 (my-map lam '(1 2 3)))
+   (lam0 (car list0) (car (cdr list0))))
+Test failed!
+osboxes@osboxes:~/Desktop/CMSC430/Final/Solutions$ ./bin
+"library runtime error: Too few arguments provided to function."
+
+too-few-arguments 1
+
+osboxes@osboxes:~/Desktop/CMSC430/Final/Solutions$ racket tests.rkt "too-few-arguments-1"
+"Evaluation failed:"
+(exn:fail:contract:arity
+ "my-or-two-args: arity mismatch;\n the expected number of arguments does not match the given number\n  expected: 2\n  given: 1\n  arguments...:\n   #f"
+ #<continuation-mark-set>)
+'(begin
+   (define globe #t)
+   (define bool-lst '(#t #f #t))
+   (define (my-or-two-args a b) (if a a b))
+   (set! globe (foldr (lambda (b a) (and b a)) #t bool-lst))
+   (define george
+     (let ((x '1))
+       (begin
+         (set! x (* (+ x '3) '5))
+         (when (> x '2) (set! x (* (+ x '3) '5)))
+         (unless (> x '2) (set! x (* (+ x '4) '2)))
+         (when (< x '4) (set! x (* (+ x '9) '4)))
+         (unless '#f (set! x (* (+ x '2) '7)))
+         (if x (set! x (* x x)) '7)
+         (if '#f (set! x '0) '9)
+         x)))
+   (set! globe (and (begin (set! globe #f) globe) #t))
+   (my-or-two-args globe))
+Test failed!
+osboxes@osboxes:~/Desktop/CMSC430/Final/Solutions$ ./bin
+"library runtime error: Too few arguments provided to function."

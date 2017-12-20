@@ -1,0 +1,42 @@
+from amb
+null?
+car
+cdr
+cons
+list
+=
++
+*
+
+from nqueens
+-
+append
+not
+
+from fib-cont
+none that we don't have
+
+from exceptions-continuations
+none that we don't have
+
+from guard-continuations
+>
+promise?
+
+Supported Prims:
+car
+cdr
+null?
+cons
+list
+append 
+
++
+-
+*
+/
+=
+<
+>
+
+promise? 

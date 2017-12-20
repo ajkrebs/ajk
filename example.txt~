@@ -1,0 +1,4 @@
+All public tests with GC off compiled with flags
+-lgc and -std=c++11.
+
+

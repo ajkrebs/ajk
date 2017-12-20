@@ -1,0 +1,15 @@
+ToDo:
+
+Part II
+	Handle one more error type
+
+	Think about how you handled applying an int, symbol, etc and
+	see if there is a better way to do it
+
+	Write some more tests, clean up.
+
+	Fix tests.rkt so the bin and the error reporter
+	cooperate and print the same thing.
+
+Part III
+     Do Part III
