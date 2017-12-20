@@ -808,29 +808,3 @@ extern "C"
     return const_init_int(hash_ptr->size());
   }
 }
-
-/*
-int main(void)
-{
-  u64 h = prim_hash();
-   u64 v1 = const_init_int(0), v2 = const_init_int(2),
-    vl = const_init_int(3), v3 = const_init_int(4),
-    v4 = const_init_int(5), v5 = const_init_int(6),
-    v6 = const_init_int(7), v7 = const_init_int(8),
-    v8 = const_init_int(9);
-  h = prim_hash_45set(h, v1, v2);
-  h = prim_hash_45set(h, v3, v4);
-  h = prim_hash_45set(h, v5, v6);
-  h = prim_hash_45set(h, v7, v8);
-  h = prim_hash_45set(h, const_init_int(8), const_init_int(9));
-  u64 v = prim_hash_45ref(h, const_init_int(8));
-  printf("size: %i\n", DECODE_INT(prim_hash_45count(h)));
-  printf("value: %i\n", DECODE_INT(v));
-  h = prim_hash_45remove(h, const_init_int(8));
-  u64 v0 = prim_hash_45ref(h, const_init_int(8));
-  printf("size: %i\n", DECODE_INT(prim_hash_45count(h)));
-  printf("value0: %i\n", DECODE_INT(v0)); 
-
-} 
-
-*/
