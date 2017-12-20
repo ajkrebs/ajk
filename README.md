@@ -81,9 +81,15 @@ false otherwise.
 
 / < /
 
-Takes in any number of integer arguments. 
+Takes in any number of integer arguments. If any argument is not an integer,
+it will fail with an error. Returns true if the list of integers is in descending
+order.
 
 / > /
+
+Takes in any number of integer arguments. If any argument is not an integer,
+it will fail with an error. Returns true if the list of integers is in increasing
+order.
 
 // Lists //
 
@@ -219,7 +225,7 @@ I used the same flags as above to compile the programs for part IV.
 I managed to get all of the programs to compile with garbage collection enabled, aside
 from those noted above.
 I added a #define GC that toggles garbage collection on and off in the header.cpp file. To get GC
-working, I wrapped all registre allocations in calls to alloca and store. I did this
+working, I wrapped all register allocations in calls to alloca and store. I did this
 by modifying closure-convert.rkt. I just wrote a function that would wrap a call
 to allocate a register in calls to alloca and store.
 
@@ -233,5 +239,5 @@ indices.
 While the programs compiled and ran fine with the garbage collector enabled, I was
 getting some memory errors when running the binary through valgrind. Specifically,
 I was getting use of uninitialized memory errors and branching on uninitialized
-values errors. 
-# ajk
+values errors. Regardless, valgrind indicated that no memory was "definetely" lost,
+but some may have leaked.
